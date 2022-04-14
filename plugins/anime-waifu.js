@@ -1,14 +1,17 @@
-import fetch from 'node-fetch'
-
-let handler = async (m, { conn, usedPrefix }) => {
-    let res = await fetch('https://api.waifu.pics/sfw/waifu')
-    if (!res.ok) throw await res.text()
-    let json = await res.json()
-    if (!json.url) throw 'Error!'
-    conn.sendButton(m.chat, 'Istri kartun', author, json.url, [['waifu', `${usedPrefix}waifu`]], m)
+let fetch = require('node-fetch')
+let handler = async (m, { conn, usedPrefix, command }) => {
+  try {
+  let res = await fetch('https://api.waifu.pics/sfw/waifu')
+  let json = await res.json()
+  conn.sendBI(m.chat, `istri kartun🤭 @${m.sender.split('@')[0]}`, wm, json.url, [[`Next`, `${usedPrefix}${command}`]], m, {mentions: [m.sender], jpegThumbnail: await(await fetch(json.url)).buffer()})
+  } catch {
+    throw eror 
+  }
 }
 handler.help = ['waifu']
-handler.tags = ['internet']
+handler.tags = ['anime']
 handler.command = /^(waifu)$/i
-//MADE IN ERPAN 1140 BERKOLABORASI DENGAN BTS
-export default handler
+
+handler.limit = true
+
+module.exports = handler
