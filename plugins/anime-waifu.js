@@ -1,22 +1,14 @@
-import {
-  readdirSync,
-  statSync,
-  unlinkSync,
-  existsSync,
-  readFileSync,
-  writeFileSync
-} from 'fs';
-let handler = async (m, { usedPrefix, command, text }) => {
-    let ar = Object.keys(plugins)
-    let ar1 = ar.map(v => v.replace('.js', ''))
-    if (!text) throw `uhm.. teksnya mana?\n\ncontoh:\n${usedPrefix + command} menu`
-    if (!ar1.includes(text)) return m.reply(`'${text}' tidak ditemukan!\n\n${ar1.map(v => ' ' + v).join`\n`}`)
-    m.reply(readFileSync('./plugins/' + text + '.js', 'utf-8'))
+let fetch = require('node-fetch')
+let handler = async(m, { conn }) => {
+  let res = await fetch('https://api.waifu.pics/sfw/waifu')
+  if (!res.ok) throw await res.text()
+  let json = await res.json()
+  if (!json.url) throw 'Error!'
+  conn.sendFile(m.chat, json.url, '', '*©bot md by rio*', m)
 }
-handler.help = ['getplugin'].map(v => v + ' <teks>')
-handler.tags = ['owner']
-handler.command = /^(gp)$/i
-
-handler.rowner = true
-
-export default handler
+handler.help = ['waifu']
+handler.tags = ['anime']
+handler.command = /^(waifu)$/i
+handler.limit = true
+//MADE IN ERPAN 1140 BERKOLABORASI DENGAN BTS
+module.exports = handler
